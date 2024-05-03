@@ -4,20 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
+    <link rel="stylesheet" href="leaflet.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <form>
             <input type="text" placeholder="Enter the location">
-            <button> Get Weather info </button>
+            <button id="showLocationButton"> Get Weather info </button>
         </form>
         <div class="msg">
             <p>Weather info will show up here</p>
         </div>
+        <div id="map-container" style="width: 600px; height: 400px;">
+            <!-- <input type="text" id="latitudeInput">
+            <input type="text" id="longitudeInput"> -->
+            
+        </div>
+        
+
     </div>
 
 
-
+    <script src="leaflet.js"></script>
+    <!-- <script src="maps.js"></script>   -->
     <script src="script.js"></script>
 </body>
 </html>

@@ -9,7 +9,27 @@ const place = document.querySelector(".container input");
 const btn = document.querySelector("form button");
 const msg = document.querySelector(".msg");
 
+//maps.js
+
+const mapContainer = document.getElementById('map-container');
+
+var map = L.map(mapContainer).setView([20.5937, 78.9629], 4);  // Initial view (adjustable)
+
+L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+// Example code for handling user input (latitude/longitude) and displaying marker (replace with your logic)
+// This example assumes you have input elements with IDs 'latitudeInput' and 'longitudeInput'
+const latitudeInput = document.getElementById('latitudeInput');
+const longitudeInput = document.getElementById('longitudeInput');
+
+// const markerButton = document.querySelector("form button");
+
+var lat = undefined;
+var lon = undefined;
 btn.addEventListener("click",async (evt) => {
+    btn.disabled = true;
     msg.innerText = "Getting Temperature info...";
     evt.preventDefault();
     let loc = place.value;
@@ -28,8 +48,8 @@ btn.addEventListener("click",async (evt) => {
 
     console.log(data);
 
-    let lat = data[0]["lat"];
-    let lon = data[0]["lon"];
+    lat = data[0]["lat"];
+    lon = data[0]["lon"];
 
     console.log(lat,lon);
 
@@ -37,39 +57,20 @@ btn.addEventListener("click",async (evt) => {
 
     } catch (error) {
         msg.innerText = `${loc} is not  valid location!`;
+        btn.disabled = false;
     };
     
 });
 
 const weather = async (lat,lon,loc) => {
+    map.off();
+    map.remove();
+    map = L.map(mapContainer).setView([20.5937, 78.9629], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    
 
-    // let d = new Date();
-
-    // let year = d.getFullYear();
-    // let month = d.getUTCMonth();
-    // let day = d.getUTCDate();
-
-    // if(Math.floor(month/10) === 0) {
-    //     month = eval(month+'+1');
-    //     month = `0${month}`
-    // };
-    // if(Math.floor(day/10) === 0) {
-    //     day = `0${day}`
-    // };
-    // let date = `${year}-${month}-${day}`
-    // let h = d.getHours();
-    // let m = d.getMinutes();
-    // let s = d.getSeconds();
-
-    // if(Math.floor(m/10) === 0) {
-    //     h = `0${h}`
-    // };
-    // if(Math.floor(m/10) === 0) {
-    //     m = `0${m}`
-    // };
-    // if(Math.floor(m/10) === 0) {
-    //     m = `0${m}`
-    // };
     try {
         URL2 = `${BASE_URL2}latitude=${lat}&longitude=${lon}&current=temperature_2m`
     console.log(URL2);
@@ -79,9 +80,24 @@ const weather = async (lat,lon,loc) => {
     
     loc = loc.toUpperCase();
 
+    // merged
+    const latitude = lat;// parseFloat(latitudeInput.value);
+    const longitude = lon; //parseFloat(longitudeInput.value);
+  
+    if (isNaN(latitude) || isNaN(longitude)) {
+      alert('Please enter valid latitude and longitude values.');
+      return;
+    }
+  
+    const marker = L.marker([latitude, longitude]).addTo(map);
+    map.setView([latitude, longitude], 5);
+    marker.bindPopup(`<b>Location:</b> ${loc} Temperature: ${temp}°C`).openPopup();
+
     msg.innerText = `The temperature in ${loc} is ${temp}°C`
+    btn.disabled = false;
     } catch (error) {
         msg.innerText = `oops... ${error} occured!!!`
+        btn.disabled = false;
     };
     
 };
