@@ -1,5 +1,5 @@
 const BASE_URL1 = "https://geocode.maps.co/search?q=";
-const api = "api_key=6631f322afd01721452851bahd4019f";
+const api = `api_key=${api_token}`;
 
 
 const BASE_URL2 = "https://api.open-meteo.com/v1/forecast?"
